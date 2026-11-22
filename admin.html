@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F7F5F0" />
+    <title>Admin — Blast Undangan Edu Fair 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container navbar">
+        <a class="brand" href="index.html"
+          ><span class="brand-mark">EF</span><span>EDU FAIR 2026</span></a
+        >
+        <nav class="nav-links" aria-label="Navigasi admin">
+          <a class="nav-rsvp" href="index.html">Lihat Undangan</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <div class="container">
+        <div class="admin-heading">
+          <div>
+            <p class="eyebrow">Panel Panitia</p>
+            <h1>Blast Undangan Tamu</h1>
+          </div>
+          <span class="guest-badge">KONTROL DISTRIBUSI</span>
+        </div>
+
+        <section class="admin-panel" aria-label="Pengaturan daftar tamu">
+          <div class="admin-controls">
+            <label class="control-group"
+              >Unggah File CSV
+              <input type="file" id="csvFile" accept=".csv,text/csv" />
+            </label>
+            <label class="control-group"
+              >Base URL Undangan
+              <input
+                type="text"
+                id="baseUrl"
+                placeholder="http://127.0.0.1:5500/index.html"
+              />
+            </label>
+            <label class="control-group"
+              >Filter Kategori
+              <select id="categoryFilter">
+                <option value="Semua">Semua</option>
+                <option value="Universitas">Universitas</option>
+                <option value="Perusahaan">Perusahaan</option>
+                <option value="Alumni">Alumni</option>
+              </select>
+            </label>
+            <label class="control-group"
+              >Cari Nama / Instansi
+              <input
+                type="search"
+                id="searchGuest"
+                placeholder="Ketik nama atau instansi"
+              />
+            </label>
+          </div>
+          <div class="admin-actions">
+            <button class="secondary-button" id="loadDefault" type="button">
+              Muat Data CSV Bawaan
+            </button>
+            <span class="csv-status" id="csvStatus" aria-live="polite"
+              >Belum ada data tamu.</span
+            >
+          </div>
+        </section>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Tamu</th>
+                <th>Instansi</th>
+                <th>Kategori</th>
+                <th>No. WhatsApp</th>
+                <th>Link Undangan</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="guestTableBody">
+              <tr>
+                <td class="empty-row" colspan="7">
+                  Unggah CSV atau muat data bawaan untuk melihat daftar tamu.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container footer-inner">
+        <p>
+          SMK Negeri 6 Kota Tangerang Selatan • Edu Fair &amp; Career Day 2026
+        </p>
+        <p>Panel Admin Panitia</p>
+      </div>
+    </footer>
+
+    <script>
+      const defaultCsv = `id,nama_tamu,instansi,kategori,no_whatsapp
+1,"Dr. Rina Kusumawati, M.Pd.",Universitas Indonesia,Universitas,6281234567890
+2,"Budi Santoso, S.Kom.",PT Telkom Indonesia (Persero) Tbk,Perusahaan,6281398765432
+3,"Ir. Sinta Permata, M.T.",Universitas Negeri Jakarta,Universitas,6285678123401
+4,Ahmad Fauzi,Alumni Angkatan 2022 - Software Engineer,Alumni,6287855667788
+5,Nur Aisyah,PT Astra International Tbk,Perusahaan,6281299887766
+6,"Prof. Hadi Wijaya, Ph.D.",Institut Teknologi Bandung,Universitas,6281112233445
+7,Dewi Lestari,Alumni Angkatan 2021 - Data Analyst,Alumni,6285212349876`;
+
+      const csvFile = document.getElementById("csvFile");
+      const loadDefault = document.getElementById("loadDefault");
+      const categoryFilter = document.getElementById("categoryFilter");
+      const searchGuest = document.getElementById("searchGuest");
+      const baseUrlInput = document.getElementById("baseUrl");
+      const guestTableBody = document.getElementById("guestTableBody");
+      const csvStatus = document.getElementById("csvStatus");
+
+      let guests = [];
+
+      // Menentukan index.html secara otomatis dari lokasi halaman admin saat ini.
+      const detectedBaseUrl = new URL("index.html", window.location.href).href;
+      baseUrlInput.value = detectedBaseUrl;
+
+      // Parser CSV memproses tanda kutip ganda dan koma di dalam setiap kolom.
+      function parseCsv(text) {
+        const rows = [];
+        let row = [];
+        let value = "";
+        let insideQuotes = false;
+
+        for (let i = 0; i < text.length; i += 1) {
+          const char = text[i];
+          const nextChar = text[i + 1];
+
+          if (char === '"') {
+            if (insideQuotes && nextChar === '"') {
+              value += '"';
+              i += 1;
+            } else {
+              insideQuotes = !insideQuotes;
+            }
+          } else if (char === "," && !insideQuotes) {
+            row.push(value.trim());
+            value = "";
+          } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+            if (char === "\r" && nextChar === "\n") i += 1;
+            row.push(value.trim());
+            if (row.some((item) => item !== "")) rows.push(row);
+            row = [];
+            value = "";
+          } else {
+            value += char;
+          }
+        }
+
+        if (value !== "" || row.length > 0) {
+          row.push(value.trim());
+          if (row.some((item) => item !== "")) rows.push(row);
+        }
+
+        if (rows.length < 2) return [];
+
+        const headers = rows
+          .shift()
+          .map((header) => header.replace(/^\ufeff/, "").trim());
+        return rows.map((columns) => {
+          const guest = {};
+          headers.forEach((header, index) => {
+            guest[header] = (columns[index] || "").trim();
+          });
+          return guest;
+        });
+      }
+
+      function makeInvitationUrl(guest) {
+        const url = new URL(baseUrlInput.value.trim() || detectedBaseUrl);
+        url.searchParams.set("to", guest.nama_tamu);
+        url.searchParams.set("kategori", guest.kategori);
+        url.searchParams.set("instansi", guest.instansi);
+        return url.toString();
+      }
+
+      function makeWhatsAppUrl(guest) {
+        const invitationUrl = makeInvitationUrl(guest);
+        const message = `Yth. ${guest.nama_tamu}\n${guest.instansi}\n\nDengan hormat, kami mengundang Bapak/Ibu/Saudara untuk hadir dalam Edu Fair & Career Day 2026 dengan tema “Menjembatani Dunia Pendidikan dan Kesiapan Karier Masa Depan”.\n\nHari/Tanggal: Rabu, 25 November 2026\nWaktu: 07.00 – 14.00 WIB\nTempat: SMKN 6 Kota Tangerang Selatan\nAlamat: Jl. Griya Asri Raya, Jelupang, Kec. Serpong Utara, Kota Tangerang Selatan, Banten\n\nInformasi undangan dan konfirmasi kehadiran dapat diakses melalui tautan berikut:\n${invitationUrl}\n\nMohon bantuan konfirmasi melalui halaman RSVP. Atas perhatian dan kehadiran Anda, kami ucapkan terima kasih.`;
+
+        const phone = String(guest.no_whatsapp || "").replace(/[^0-9]/g, "");
+        return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      }
+
+      function escapeHtml(text) {
+        const element = document.createElement("span");
+        element.textContent = text ?? "";
+        return element.innerHTML;
+      }
+
+      function renderGuests() {
+        const category = categoryFilter.value;
+        const search = searchGuest.value.toLowerCase().trim();
+        const filtered = guests.filter((guest) => {
+          const categoryMatch =
+            category === "Semua" || guest.kategori === category;
+          const searchText =
+            `${guest.nama_tamu} ${guest.instansi}`.toLowerCase();
+          return categoryMatch && (!search || searchText.includes(search));
+        });
+
+        if (filtered.length === 0) {
+          guestTableBody.innerHTML =
+            '<tr><td class="empty-row" colspan="7">Tidak ada tamu yang sesuai dengan filter.</td></tr>';
+          return;
+        }
+
+        guestTableBody.innerHTML = filtered
+          .map((guest) => {
+            const invitationUrl = makeInvitationUrl(guest);
+            const whatsAppUrl = makeWhatsAppUrl(guest);
+            return `<tr>
+          <td>${escapeHtml(guest.id)}</td>
+          <td>${escapeHtml(guest.nama_tamu)}</td>
+          <td>${escapeHtml(guest.instansi)}</td>
+          <td>${escapeHtml(guest.kategori)}</td>
+          <td>${escapeHtml(guest.no_whatsapp)}</td>
+          <td class="link-cell"><a href="${escapeHtml(invitationUrl)}" target="_blank" rel="noopener">Buka undangan</a></td>
+          <td><a class="action-button" href="${escapeHtml(whatsAppUrl)}" target="_blank" rel="noopener">Kirim WhatsApp</a></td>
+        </tr>`;
+          })
+          .join("");
+      }
+
+      function loadCsvText(text, sourceName) {
+        guests = parseCsv(text);
+        csvStatus.textContent = guests.length
+          ? `${guests.length} data tamu berhasil dimuat dari ${sourceName}.`
+          : "Format CSV tidak dapat dibaca atau tidak memiliki data.";
+        renderGuests();
+      }
+
+      csvFile.addEventListener("change", function () {
+        const file = csvFile.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          loadCsvText(event.target.result, file.name);
+        };
+        reader.readAsText(file);
+      });
+
+      loadDefault.addEventListener("click", function () {
+        loadCsvText(defaultCsv, "data CSV bawaan");
+      });
+
+      categoryFilter.addEventListener("change", renderGuests);
+      searchGuest.addEventListener("input", renderGuests);
+      baseUrlInput.addEventListener("input", renderGuests);
+    </script>
+  </body>
+</html>
