@@ -320,6 +320,7 @@ svg {
   color: var(--ink);
   font-family: "Space Grotesk", sans-serif;
   letter-spacing: 2px;
+  word-break: break-word;
 }
 
 .section {

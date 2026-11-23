@@ -39,8 +39,14 @@ if (guestBadge) {
   guestBadge.textContent = `KATEGORI: ${normalizedCategory.toUpperCase()}`;
 }
 if (registrationCode) {
-  const codeSource = guestName.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
-  const codePart = codeSource.slice(0, 6) || "GUEST";
+  const registrationGuestName = (
+    params.get("to") ||
+    params.get("nama") ||
+    ""
+  ).trim();
+  const codePart = registrationGuestName
+    ? registrationGuestName.toUpperCase()
+    : "VIP";
   registrationCode.textContent = `EF26-${codePart}`;
 }
 if (senderNameElement) {
