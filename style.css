@@ -268,8 +268,10 @@ svg {
   grid-column: 1 / -1;
   min-height: 82px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
   border-top: 1px solid var(--line);
   padding: 14px 28px;
 }
@@ -277,6 +279,7 @@ svg {
 .button-primary {
   min-height: 48px;
   display: inline-flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   gap: 16px;
@@ -299,6 +302,10 @@ svg {
 
 .registration-code {
   display: grid;
+  flex: 1;
+  min-width: 220px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   border-left: 1px solid var(--line);
   padding-left: 20px;
 }
@@ -915,14 +922,15 @@ footer {
   }
 
   .pass-footer {
-    align-items: flex-start;
     flex-direction: column;
+    align-items: flex-start;
     gap: 16px;
     padding: 16px;
   }
 
   .registration-code {
     width: 100%;
+    min-width: 0;
     border-left: 0;
     border-top: 1px solid var(--line);
     padding: 10px 0 0;
