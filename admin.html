@@ -86,39 +86,36 @@
           </div>
         </section>
 
-        <div class="admin-table-wrap">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nama Tamu</th>
-                <th>Instansi</th>
-                <th>Kategori</th>
-                <th>No. WhatsApp</th>
-                <th>Link Undangan</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="guestTableBody">
-              <tr>
-                <td class="empty-row" colspan="7">
-                  Unggah CSV atau muat data bawaan untuk melihat daftar tamu.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="admin-table-card">
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama Tamu</th>
+                  <th>Instansi</th>
+                  <th>Kategori</th>
+                  <th>No. WhatsApp</th>
+                  <th>Link Undangan</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="guestTableBody">
+                <tr>
+                  <td class="empty-row" colspan="7">
+                    Unggah CSV atau muat data bawaan untuk melihat daftar tamu.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <section class="admin-panel" aria-labelledby="rsvpTitle">
-          <div class="admin-heading" style="margin-bottom: 18px">
+        <section class="admin-panel rsvp-card" aria-labelledby="rsvpTitle">
+          <div class="admin-heading rsvp-heading">
             <div>
               <p class="eyebrow">Konfirmasi Tamu</p>
-              <h2
-                id="rsvpTitle"
-                style="margin: 0; font-size: clamp(28px, 4vw, 42px)"
-              >
-                Daftar Konfirmasi Kehadiran (RSVP Masuk)
-              </h2>
+              <h2 id="rsvpTitle">Daftar Konfirmasi Kehadiran (RSVP Masuk)</h2>
             </div>
             <button class="secondary-button" id="deleteRsvpData" type="button">
               Hapus Data RSVP
@@ -183,6 +180,24 @@
 
       let guests = [];
 
+      function escapeHtml(text) {
+        const element = document.createElement("span");
+        element.textContent = text ?? "";
+        return element.innerHTML;
+      }
+
+      function categoryBadge(category) {
+        const value = String(category || "-");
+        const normalized = value.toLowerCase().replace(/[^a-z]+/g, "-");
+        return `<span class="category-badge category-${escapeHtml(normalized)}">${escapeHtml(value)}</span>`;
+      }
+
+      function statusBadge(status) {
+        const value = String(status || "-");
+        const normalized = value.toLowerCase().replace(/[^a-z]+/g, "-");
+        return `<span class="status-badge status-${escapeHtml(normalized)}">${escapeHtml(value)}</span>`;
+      }
+
       function renderRsvpList() {
         let rsvpList = [];
         try {
@@ -206,9 +221,9 @@
               <td>${index + 1}</td>
               <td>${escapeHtml(rsvp.nama)}</td>
               <td>${escapeHtml(rsvp.instansi)}</td>
-              <td>${escapeHtml(rsvp.kategori)}</td>
+              <td>${categoryBadge(rsvp.kategori)}</td>
               <td>${escapeHtml(rsvp.whatsapp)}</td>
-              <td>${escapeHtml(rsvp.status)}</td>
+              <td>${statusBadge(rsvp.status)}</td>
               <td>${escapeHtml(rsvp.perwakilan || rsvp.jumlah || "-")} orang</td>
             </tr>`;
           })
@@ -300,12 +315,6 @@
         return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
       }
 
-      function escapeHtml(text) {
-        const element = document.createElement("span");
-        element.textContent = text ?? "";
-        return element.innerHTML;
-      }
-
       function renderGuests() {
         const category = categoryFilter.value;
         const search = searchGuest.value.toLowerCase().trim();
@@ -331,7 +340,7 @@
           <td>${escapeHtml(guest.id)}</td>
           <td>${escapeHtml(guest.nama_tamu)}</td>
           <td>${escapeHtml(guest.instansi)}</td>
-          <td>${escapeHtml(guest.kategori)}</td>
+          <td>${categoryBadge(guest.kategori)}</td>
           <td>${escapeHtml(guest.no_whatsapp)}</td>
           <td class="link-cell"><a href="${escapeHtml(invitationUrl)}" target="_blank" rel="noopener">Buka undangan</a></td>
           <td><a class="action-button" href="${escapeHtml(whatsAppUrl)}" target="_blank" rel="noopener">Kirim WhatsApp</a></td>

@@ -455,7 +455,7 @@ footer {
 
 /* Tampilan khusus halaman admin */
 .admin-main {
-  padding: 40px 0 72px;
+  padding: 40px 0 0;
 }
 .admin-heading {
   display: flex;
@@ -469,11 +469,15 @@ footer {
     700 clamp(36px, 6vw, 58px)/1 "Space Grotesk",
     sans-serif;
 }
-.admin-panel {
+.admin-panel,
+.admin-table-card {
   border: 1.5px solid #14213d;
+  border-radius: 10px;
   background: #ffffff;
-  box-shadow: 6px 6px 0 #14213d;
-  padding: 22px;
+  box-shadow: 4px 4px 0 #14213d;
+  padding: 24px;
+}
+.admin-panel {
   margin-bottom: 24px;
 }
 .admin-controls {
@@ -519,18 +523,33 @@ footer {
   font-size: 13px;
   font-weight: 700;
 }
+.admin-table-card {
+  margin-bottom: 0;
+}
 .admin-table-wrap {
   width: 100%;
   overflow-x: auto;
-  border: 1.5px solid #14213d;
   background: #ffffff;
 }
 .admin-table {
   min-width: 1050px;
+  border-collapse: collapse;
+}
+.admin-table th,
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+.admin-table tbody tr:hover,
+.admin-table tbody tr:hover td {
+  background-color: #faf8f3;
 }
 .admin-table td {
   background: #ffffff;
-  vertical-align: middle;
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: 0;
 }
 .link-cell {
   max-width: 180px;
@@ -543,52 +562,70 @@ footer {
 .action-button {
   display: inline-block;
   border: 1.5px solid #14213d;
+  border-radius: 6px;
   background: #25d366;
   color: #14213d;
-  padding: 7px 9px;
+  padding: 8px 14px;
   text-decoration: none;
-  font-size: 12px;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  line-height: 1.2;
   font-weight: 800;
-  box-shadow: 3px 3px 0 #14213d;
+  box-shadow: none;
 }
 .empty-row {
   text-align: center;
   padding: 28px;
 }
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+.rsvp-card {
+  margin-top: 48px;
+  margin-bottom: 48px;
 }
-.detail-card {
-  min-height: 150px;
-  padding: 22px;
-  border: 1.5px solid #14213d;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 4px 4px 0 #14213d;
-}
-.detail-card h3 {
-  display: flex;
+.rsvp-heading {
   align-items: center;
-  gap: 10px;
-  margin: 0 0 12px;
-  font-size: 19px;
+  margin-bottom: 18px;
 }
-.detail-card h3 svg {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  fill: none;
-  stroke: #d95d39;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.detail-card p {
+.rsvp-heading h2 {
   margin: 0;
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.category-badge,
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  background: #eef1f4;
+  color: #4a5568;
+}
+.category-universitas {
+  background: #e8efff;
+  color: #28539c;
+}
+.category-perusahaan {
+  background: #fff1d6;
+  color: #8a5a00;
+}
+.category-alumni {
+  background: #e8f5eb;
+  color: #2f7041;
+}
+.status-hadir {
+  background: #daf4e3;
+  color: #1f6a36;
+}
+.status-tidak-hadir {
+  background: #fde5df;
+  color: #9c3d25;
+}
+.status-badge:not([class*="status-"]) {
+  background: #eef1f4;
+  color: #4a5568;
 }
 
 @media (max-width: 768px) {
