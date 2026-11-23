@@ -23,6 +23,11 @@ const guestGreeting = document.getElementById("guestGreeting");
 const guestInstitution = document.getElementById("guestInstitution");
 const guestBadge = document.getElementById("guestBadge");
 const registrationCode = document.getElementById("registrationCode");
+const senderNameElement = document.getElementById("senderName");
+
+const senderName = (
+  params.get("from") || "Panitia Edu Fair & Career Day 2026"
+).trim();
 
 if (guestGreeting) {
   guestGreeting.textContent = `Kepada Yth. ${guestName}`;
@@ -37,6 +42,9 @@ if (registrationCode) {
   const codeSource = guestName.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
   const codePart = codeSource.slice(0, 6) || "GUEST";
   registrationCode.textContent = `EF26-${codePart}`;
+}
+if (senderNameElement) {
+  senderNameElement.textContent = senderName;
 }
 
 // Otomatis mengisi form RSVP dari parameter tautan undangan.
@@ -69,17 +77,28 @@ if (rsvpForm) {
       kategori: formData.get("kategori"),
       whatsapp: formData.get("whatsapp"),
       status: formData.get("status"),
-      jumlah: formData.get("jumlah"),
+      perwakilan: formData.get("jumlah"),
       dikirimPada: new Date().toISOString(),
     };
 
+    let rsvpList = [];
+    try {
+      const savedList = JSON.parse(localStorage.getItem("rsvpList") || "[]");
+      if (Array.isArray(savedList)) rsvpList = savedList;
+    } catch (error) {
+      rsvpList = [];
+    }
+
+    rsvpList.push(data);
+    localStorage.setItem("rsvpList", JSON.stringify(rsvpList));
     localStorage.setItem("rsvpEduFair2026", JSON.stringify(data));
 
     document.getElementById("proofName").textContent = data.nama;
     document.getElementById("proofInstitution").textContent = data.instansi;
     document.getElementById("proofCategory").textContent = data.kategori;
     document.getElementById("proofStatus").textContent = data.status;
-    document.getElementById("proofAmount").textContent = `${data.jumlah} orang`;
+    document.getElementById("proofAmount").textContent =
+      `${data.perwakilan} orang`;
     rsvpProof.hidden = false;
     rsvpProof.scrollIntoView({ behavior: "smooth", block: "center" });
   });
@@ -94,7 +113,8 @@ if (savedRsvp && rsvpProof) {
     document.getElementById("proofInstitution").textContent = data.instansi;
     document.getElementById("proofCategory").textContent = data.kategori;
     document.getElementById("proofStatus").textContent = data.status;
-    document.getElementById("proofAmount").textContent = `${data.jumlah} orang`;
+    document.getElementById("proofAmount").textContent =
+      `${data.perwakilan || data.jumlah} orang`;
   } catch (error) {
     localStorage.removeItem("rsvpEduFair2026");
   }

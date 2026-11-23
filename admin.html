@@ -66,6 +66,15 @@
                 placeholder="Ketik nama atau instansi"
               />
             </label>
+            <label class="control-group"
+              >Nama Pengirim / Panitia
+              <input
+                type="text"
+                id="senderName"
+                value="Farid Athaillah (Panitia)"
+                placeholder="Nama pengirim undangan"
+              />
+            </label>
           </div>
           <div class="admin-actions">
             <button class="secondary-button" id="loadDefault" type="button">
@@ -99,6 +108,46 @@
             </tbody>
           </table>
         </div>
+
+        <section class="admin-panel" aria-labelledby="rsvpTitle">
+          <div class="admin-heading" style="margin-bottom: 18px">
+            <div>
+              <p class="eyebrow">Konfirmasi Tamu</p>
+              <h2
+                id="rsvpTitle"
+                style="margin: 0; font-size: clamp(28px, 4vw, 42px)"
+              >
+                Daftar Konfirmasi Kehadiran (RSVP Masuk)
+              </h2>
+            </div>
+            <button class="secondary-button" id="deleteRsvpData" type="button">
+              Hapus Data RSVP
+            </button>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Instansi</th>
+                  <th>Kategori</th>
+                  <th>No. WhatsApp</th>
+                  <th>Status</th>
+                  <th>Perwakilan</th>
+                </tr>
+              </thead>
+              <tbody id="rsvpTableBody">
+                <tr>
+                  <td class="empty-row" colspan="7">
+                    Belum ada data konfirmasi RSVP.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </main>
 
@@ -128,8 +177,52 @@
       const baseUrlInput = document.getElementById("baseUrl");
       const guestTableBody = document.getElementById("guestTableBody");
       const csvStatus = document.getElementById("csvStatus");
+      const senderNameInput = document.getElementById("senderName");
+      const rsvpTableBody = document.getElementById("rsvpTableBody");
+      const deleteRsvpData = document.getElementById("deleteRsvpData");
 
       let guests = [];
+
+      function renderRsvpList() {
+        let rsvpList = [];
+        try {
+          const savedList = JSON.parse(
+            localStorage.getItem("rsvpList") || "[]",
+          );
+          if (Array.isArray(savedList)) rsvpList = savedList;
+        } catch (error) {
+          rsvpList = [];
+        }
+
+        if (rsvpList.length === 0) {
+          rsvpTableBody.innerHTML =
+            '<tr><td class="empty-row" colspan="7">Belum ada data konfirmasi RSVP.</td></tr>';
+          return;
+        }
+
+        rsvpTableBody.innerHTML = rsvpList
+          .map((rsvp, index) => {
+            return `<tr>
+              <td>${index + 1}</td>
+              <td>${escapeHtml(rsvp.nama)}</td>
+              <td>${escapeHtml(rsvp.instansi)}</td>
+              <td>${escapeHtml(rsvp.kategori)}</td>
+              <td>${escapeHtml(rsvp.whatsapp)}</td>
+              <td>${escapeHtml(rsvp.status)}</td>
+              <td>${escapeHtml(rsvp.perwakilan || rsvp.jumlah || "-")} orang</td>
+            </tr>`;
+          })
+          .join("");
+      }
+
+      deleteRsvpData.addEventListener("click", function () {
+        if (!window.confirm("Hapus seluruh data konfirmasi RSVP?")) return;
+        localStorage.removeItem("rsvpList");
+        localStorage.removeItem("rsvpEduFair2026");
+        renderRsvpList();
+      });
+
+      renderRsvpList();
 
       // Menentukan index.html secara otomatis dari lokasi halaman admin saat ini.
       const detectedBaseUrl = new URL("index.html", window.location.href).href;
@@ -191,12 +284,17 @@
         url.searchParams.set("to", guest.nama_tamu);
         url.searchParams.set("kategori", guest.kategori);
         url.searchParams.set("instansi", guest.instansi);
+        const senderName =
+          senderNameInput.value.trim() || "Panitia Edu Fair & Career Day 2026";
+        url.searchParams.set("from", senderName);
         return url.toString();
       }
 
       function makeWhatsAppUrl(guest) {
         const invitationUrl = makeInvitationUrl(guest);
-        const message = `Yth. ${guest.nama_tamu}\n${guest.instansi}\n\nDengan hormat, kami mengundang Bapak/Ibu/Saudara untuk hadir dalam Edu Fair & Career Day 2026 dengan tema “Menjembatani Dunia Pendidikan dan Kesiapan Karier Masa Depan”.\n\nHari/Tanggal: Rabu, 25 November 2026\nWaktu: 07.00 – 14.00 WIB\nTempat: SMKN 6 Kota Tangerang Selatan\nAlamat: Jl. Griya Asri Raya, Jelupang, Kec. Serpong Utara, Kota Tangerang Selatan, Banten\n\nInformasi undangan dan konfirmasi kehadiran dapat diakses melalui tautan berikut:\n${invitationUrl}\n\nMohon bantuan konfirmasi melalui halaman RSVP. Atas perhatian dan kehadiran Anda, kami ucapkan terima kasih.`;
+        const senderName =
+          senderNameInput.value.trim() || "Panitia Edu Fair & Career Day 2026";
+        const message = `Yth. ${guest.nama_tamu}\n${guest.instansi}\n\nDengan hormat, kami mengundang Bapak/Ibu/Saudara untuk hadir dalam Edu Fair & Career Day 2026 dengan tema “Menjembatani Dunia Pendidikan dan Kesiapan Karier Masa Depan”.\n\nHari/Tanggal: Rabu, 25 November 2026\nWaktu: 07.00 – 14.00 WIB\nTempat: SMKN 6 Kota Tangerang Selatan\nAlamat: Jl. Griya Asri Raya, Jelupang, Kec. Serpong Utara, Kota Tangerang Selatan, Banten\n\nInformasi undangan dan konfirmasi kehadiran dapat diakses melalui tautan berikut:\n${invitationUrl}\n\nMohon bantuan konfirmasi melalui halaman RSVP. Atas perhatian dan kehadiran Anda, kami ucapkan terima kasih.\n\nHormat kami,\n${senderName}\nPanitia Edu Fair & Career Day 2026 SMKN 6 Kota Tangerang Selatan`;
 
         const phone = String(guest.no_whatsapp || "").replace(/[^0-9]/g, "");
         return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -268,6 +366,7 @@
       categoryFilter.addEventListener("change", renderGuests);
       searchGuest.addEventListener("input", renderGuests);
       baseUrlInput.addEventListener("input", renderGuests);
+      senderNameInput.addEventListener("input", renderGuests);
     </script>
   </body>
 </html>
