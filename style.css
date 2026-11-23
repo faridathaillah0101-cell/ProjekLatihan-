@@ -604,16 +604,19 @@ footer {
   color: #4a5568;
 }
 .category-universitas {
-  background: #e8efff;
-  color: #28539c;
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d63ed;
 }
 .category-perusahaan {
-  background: #fff1d6;
-  color: #8a5a00;
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #92400e;
 }
 .category-alumni {
-  background: #e8f5eb;
-  color: #2f7041;
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
 }
 .status-hadir {
   background: #daf4e3;
@@ -626,6 +629,365 @@ footer {
 .status-badge:not([class*="status-"]) {
   background: #eef1f4;
   color: #4a5568;
+}
+
+/* Modern Clean Blue & White Theme */
+:root {
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-600: #1d63ed;
+  --blue-800: #1e40af;
+  --slate-900: #0f172a;
+  --slate-500: #64748b;
+  --surface: #ffffff;
+  --page: #f8fafc;
+  --line: #e2e8f0;
+  --soft-shadow: 0 10px 25px -5px rgba(29, 99, 237, 0.08);
+}
+
+body {
+  color: var(--slate-900);
+  background: var(--page);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+}
+
+.brand,
+.nav-links a,
+.text-link,
+.guest-institution,
+.pass-details strong,
+.registration-code strong {
+  color: var(--slate-900);
+}
+
+.brand-mark {
+  border: 1px solid var(--blue-100);
+  border-radius: 10px;
+  background: var(--blue-50);
+  color: var(--blue-600);
+  box-shadow: none;
+}
+
+.nav-links .nav-rsvp {
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  background: var(--blue-50);
+  color: var(--blue-600);
+  box-shadow: none;
+}
+
+.nav-links .nav-rsvp:hover {
+  background: var(--blue-600);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.event-pass,
+.benefit-card,
+.detail-card,
+.map-frame,
+.rsvp-form,
+.rsvp-proof,
+.admin-panel,
+.admin-table-card {
+  border: 1px solid var(--blue-100);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--soft-shadow);
+}
+
+.event-pass {
+  overflow: hidden;
+}
+
+.pass-top {
+  border-bottom: 1px solid var(--line);
+}
+
+.pass-greeting,
+.pass-title,
+.pass-details div,
+.pass-footer,
+.registration-code,
+.section-heading,
+.proof-top,
+.proof-code,
+.rsvp-proof dl div {
+  border-color: var(--line);
+}
+
+.pass-greeting {
+  color: var(--slate-900);
+}
+
+.guest-institution,
+.section-heading h2,
+.location-copy h2,
+.rsvp-proof h3,
+.detail-card h3,
+.benefit-card h3,
+.admin-heading h1,
+.rsvp-heading h2 {
+  color: var(--blue-600);
+}
+
+.pass-details strong,
+.location-copy address,
+.contact-line,
+.rsvp-form label,
+.control-group,
+.proof-top strong,
+.rsvp-proof dd,
+body,
+td,
+.detail-card p {
+  color: var(--slate-900);
+}
+
+.pass-theme,
+.benefit-card p,
+.location-copy address,
+.contact-line,
+.csv-status,
+.rsvp-form legend,
+.proof-code {
+  color: var(--slate-500);
+}
+
+.pass-details span,
+.edition,
+.card-number,
+.eyebrow,
+.rsvp-proof dt {
+  color: var(--blue-600);
+}
+
+.pass-mark {
+  border: 1px solid var(--blue-100);
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+.guest-badge,
+.category-badge,
+.status-badge {
+  border: 1px solid #bfdbfe;
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+.button-primary,
+.full-button {
+  border: 1px solid var(--blue-600);
+  border-radius: 10px;
+  background: var(--blue-600);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.button-primary:hover,
+.full-button:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+  box-shadow: none;
+  transform: none;
+}
+
+.section-heading {
+  border-bottom: 1px solid var(--line);
+}
+
+.benefit-grid {
+  gap: 16px;
+}
+
+.benefit-card {
+  border: 1px solid var(--blue-100);
+  border-radius: 16px;
+}
+
+.benefit-card:nth-child(odd),
+.benefit-card:nth-child(-n + 2),
+.benefit-card:not(:last-child) {
+  border: 1px solid var(--blue-100);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.detail-card h3 svg {
+  stroke: var(--blue-600);
+}
+
+.rundown-section,
+.rsvp-section {
+  border: 0;
+  background: var(--page);
+}
+
+.table-wrap,
+.map-frame,
+.rsvp-form fieldset {
+  border: 1px solid var(--blue-100);
+}
+
+.map-frame {
+  overflow: hidden;
+}
+
+.table-wrap {
+  border-radius: 16px;
+  box-shadow: var(--soft-shadow);
+}
+
+th {
+  border-bottom: 1px solid var(--line);
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+td,
+th {
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  background: #ffffff;
+}
+
+.text-link {
+  color: var(--blue-600);
+}
+
+.text-link:hover {
+  color: var(--blue-800);
+}
+
+.rsvp-form input,
+.rsvp-form select,
+.control-group input,
+.control-group select {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--blue-50);
+  color: var(--slate-900);
+}
+
+.rsvp-form input:focus,
+.rsvp-form select:focus,
+.control-group input:focus,
+.control-group select:focus {
+  outline: 2px solid rgba(29, 99, 237, 0.16);
+  border-color: var(--blue-600);
+}
+
+.rsvp-form fieldset {
+  border-radius: 10px;
+}
+
+.rsvp-proof dl div {
+  border-bottom: 1px solid var(--line);
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.admin-main {
+  background: var(--page);
+}
+
+.admin-heading h1 {
+  color: var(--slate-900);
+}
+
+.admin-panel,
+.admin-table-card {
+  border: 1px solid var(--blue-100);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: var(--soft-shadow);
+}
+
+.secondary-button {
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  background: var(--blue-50);
+  color: var(--blue-600);
+  box-shadow: none;
+}
+
+.secondary-button:hover {
+  border-color: var(--blue-600);
+  background: #ffffff;
+  color: var(--blue-800);
+}
+
+.admin-table-wrap {
+  border: 0;
+  background: #ffffff;
+}
+
+.admin-table th {
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-table td {
+  background: #ffffff;
+}
+
+.admin-table tbody tr:hover,
+.admin-table tbody tr:hover td {
+  background: #f8fbff;
+}
+
+.action-button {
+  border: 1px solid #16a34a;
+  border-radius: 10px;
+  background: #16a34a;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.action-button:hover {
+  border-color: #15803d;
+  background: #15803d;
+  color: #ffffff;
+}
+
+.category-badge,
+.status-badge {
+  border: 1px solid #bfdbfe;
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+.status-hadir {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.status-tidak-hadir {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
 }
 
 @media (max-width: 768px) {
