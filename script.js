@@ -65,6 +65,13 @@ if (categoryInput) {
 // Menangani konfirmasi RSVP tanpa reload dan menyimpannya ke localStorage.
 const rsvpForm = document.getElementById("rsvpForm");
 const rsvpProof = document.getElementById("rsvpProof");
+const rsvpLayout = rsvpForm ? rsvpForm.closest(".rsvp-layout") : null;
+
+function showRsvpProofLayout() {
+  if (!rsvpLayout) return;
+  rsvpLayout.classList.remove("rsvp-form-only");
+  rsvpLayout.classList.add("rsvp-with-proof");
+}
 
 if (rsvpForm) {
   rsvpForm.addEventListener("submit", function (event) {
@@ -100,6 +107,7 @@ if (rsvpForm) {
     document.getElementById("proofAmount").textContent =
       `${data.perwakilan} orang`;
     rsvpProof.hidden = false;
+    showRsvpProofLayout();
     rsvpProof.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 }
@@ -115,6 +123,8 @@ if (savedRsvp && rsvpProof) {
     document.getElementById("proofStatus").textContent = data.status;
     document.getElementById("proofAmount").textContent =
       `${data.perwakilan || data.jumlah} orang`;
+    rsvpProof.hidden = false;
+    showRsvpProofLayout();
   } catch (error) {
     localStorage.removeItem("rsvpEduFair2026");
   }
